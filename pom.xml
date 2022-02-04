@@ -84,6 +84,10 @@
 						<configuration>
 							<inputSpec>${project.basedir}/src/main/resources/ppbs-swagger-codegen.yaml</inputSpec>
 							<apiPackage>es.danielgaspar.ppbs.api</apiPackage>
+							<generateApis>true</generateApis>
+							<generateApiTests>true</generateApiTests>
+							<generateModelTests>true</generateModelTests>
+							<validateSpec>true</validateSpec>
 							<modelPackage>es.danielgaspar.ppbs.model</modelPackage>
 							<language>spring</language>
 							<configOptions>

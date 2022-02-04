@@ -136,9 +136,33 @@ paths:
         '404':
           description: Not Found
       deprecated: false
+    
+    get:
+      tags:
+      - ecommerce
+      summary: Get all ecommerce 
+      operationId: getAllEcommerce
+      produces:
+      - "application/json"  
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+                "$ref": "#/definitions/EcommerceDetail"
+        '204':
+          description: No Content            
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      deprecated: false      
 
 
-  "/ecommerce/{id}/report/{month}":
+  "/ecommerce/{id}/report/{year}/{month}":
     get:
       tags:
       - ecommerce
@@ -147,17 +171,21 @@ paths:
       consumes:
       - application/json
       produces:
-      - "*/*"
+      - "application/json"
       parameters:
       - name: id
         in: path
         description: id
         required: true
-        type: string
+        type: integer
+      - name: year
+        in: path
+        required: true
+        type: integer        
       - name: month
         in: path
         required: true
-        type: string
+        type: integer
       responses:
         '200':
           description: OK
@@ -172,6 +200,41 @@ paths:
         '404':
           description: Not Found
       deprecated: false    
+      
+  "/ecommerce/{id}/payment":
+    post:
+      tags:
+      - ecommerce
+      summary: Create new payment link to the ecommerce
+      operationId: createPayment
+      consumes:
+      - application/json
+      produces:
+      - "application/json"
+      parameters:
+      - name: id
+        in: path
+        description: id ecommerce
+        required: true
+        type: integer      
+      - name: body
+        in: body
+        description: Body request
+        required: true
+        schema: 
+            $ref: "#/definitions/Payment"
+      responses:
+        '200':
+          description: OK
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      deprecated: false      
 
  #Payment Processor API
   "/paymentprocessor/{id}":
@@ -181,13 +244,13 @@ paths:
       summary: Get Payment Processor detail
       operationId: getPaymentProcessor
       produces:
-      - "*/*"
+      - "application/json"
       parameters:
       - name: id
         in: path
         description: id
         required: true
-        type: string      
+        type: integer      
       responses:
         '200':
           description: OK
@@ -207,13 +270,13 @@ paths:
       summary: Delete Payment Processor
       operationId: deletePaymentProcessor
       produces:
-      - "*/*"
+      - "application/json"
       parameters:
       - name: id
         in: path
         description: id
         required: true
-        type: string
+        type: integer
       responses:
         '200':
           description: OK
@@ -235,8 +298,13 @@ paths:
       consumes:
       - application/json
       produces:
-      - "*/*"
+      - "application/json"
       parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        type: integer      
       - name: body
         in: body
         description: Body request
@@ -268,7 +336,7 @@ paths:
       consumes:
       - application/json
       produces:
-      - "*/*"
+      - "application/json"
       parameters:
       - name: body
         in: body
@@ -301,7 +369,7 @@ paths:
       consumes:
       - application/json
       produces:
-      - "*/*"
+      - "application/json"
       parameters:
       - name: id
         in: path
@@ -364,12 +432,35 @@ definitions:
         type: string
         description: Ecommerce name
       month:
-        type: integer
+        type: string
         description: Month
       paymentProcessorName:
         type: string
-        description: Payment Processor name        
+        description: Payment Processor name  
+      listTransactions:
+        type: array
+        items: 
+            $ref: "#/definitions/Transactions"                
     title: View
+    
+  Transactions:
+    type: object
+    title: Payment Processor
+    description: This is Payment Processor model    
+    required:
+    - name
+    properties:      
+      day:
+        type: string
+        description: Day of month    
+      transactions:
+        type: integer
+        description: Number transactions
+      amount:
+        type: number
+        format: double
+        description: Total amount + tax
+ 
 
   PaymentProcessor:
     type: object
@@ -382,7 +473,8 @@ definitions:
         type: string
         description: Payment Processor name        
       flatfee:
-        type: string
+        type: number
+        format: float
         description: Commission for each transaction      
       listAPP:
         type: array
@@ -403,7 +495,8 @@ definitions:
         type: string
         description: Payment Processor name        
       flatfee:
-        type: string
+        type: number
+        format: float
         description: Commission for each transaction  
       listAPP:
         type: array
@@ -416,8 +509,27 @@ definitions:
     description: This is Payment Processor model    
     properties:
       volumen:
-        type: integer
-        description: Payment procesor Id    
+        type: integer        
+        description: Volumen   
       app:
+        type: number
+        format: float
+        description: app value       
+
+  Payment:
+    type: object
+    title: Payment 
+    description: This is Payment model    
+    properties:
+      amount:
+        type: number
+        format: double
+        description: Payment amount
+      date:
         type: string
-        description: Payment Processor name        
+        format: date
+        description: Payment amount
+        required: true
+      description:
+        type: string
+        description: Payment description
