@@ -366,8 +366,6 @@ paths:
       - Payment Processor
       summary: Report monthly 
       operationId: reportPaymentProcessor
-      consumes:
-      - application/json
       produces:
       - "application/json"
       parameters:
@@ -375,12 +373,12 @@ paths:
         in: path
         description: id
         required: true
-        type: string
+        type: integer
       responses:
         '200':
           description: OK
           schema:
-            "$ref": "#/definitions/EcommerceReport"
+            "$ref": "#/definitions/PaymentProcessorReport"
         '201':
           description: Created
         '401':
@@ -533,3 +531,29 @@ definitions:
       description:
         type: string
         description: Payment description
+
+  PaymentProcessorReport:
+    type: object
+    title: Payment Processor Report
+    description: This is Payment Processor Report 
+    properties:
+      paymentProcessorName:
+        type: string        
+        description: Payment processor name
+      listEcommerce:
+        type: array
+        items: 
+            $ref: "#/definitions/EcommerceBilling" 
+
+  EcommerceBilling:
+    type: object
+    title: EcommerceBilling 
+    description: This is EcommerceBilling model    
+    properties:
+      ecommerceName:
+        type: string
+        description: Ecommerce name
+      amount:
+        type: number
+        format: double
+        description: Payment description            
